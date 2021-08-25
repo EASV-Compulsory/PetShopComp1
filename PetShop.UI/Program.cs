@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using PetShop.Core.IServices;
 using PetShop.Domain.IRepositories;
 using PetShop.Domain.Services;
+using PetShop.Infrastructure.Data;
 using PetShop.Infrastructure.Data.Repositories;
 
 namespace PetShop.UI
@@ -11,6 +12,7 @@ namespace PetShop.UI
     {
         static void Main(string[] args)
         {
+            FakeDb.InitData();
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddScoped<IPetRepository, PetRepository>();
             serviceCollection.AddScoped<IPetService, PetService>();
@@ -19,8 +21,6 @@ namespace PetShop.UI
             var printer = serviceProvider.GetRequiredService<IPrinter>();
             printer.StartUi();
             
-            /*var printer = new Printer(new PetService(new PetRepository()));
-            pr*/
         }
     }
 }

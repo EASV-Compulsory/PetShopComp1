@@ -7,26 +7,23 @@ namespace PetShop.Infrastructure.Data
     /// <summary>
     /// Class represents fake SQL database
     /// </summary>
-    public class FakeDb
+    public static class FakeDb
     {
         private static List<Pet> _pets;
         private static List<PetType> _petTypes;
         private static int _petId =1;
         private static int _petTypeId =1;
 
-        public FakeDb()
-        {
-            InitData();
-        }
+        
 
         #region get pets and petTypes
 
-        public IList<Pet> GetPets()
+        public static IList<Pet> GetPets()
         {
             return _pets;
         }
         
-        public IList<PetType> GetPetTypes()
+        public static IList<PetType> GetPetTypes()
         {
             return _petTypes;
             //or new List ect
@@ -36,7 +33,7 @@ namespace PetShop.Infrastructure.Data
         #endregion
 
         #region Init data
-        private void InitData()
+        public static void InitData()
         {
             _petTypes = new List<PetType>();
             _pets = new List<Pet>();

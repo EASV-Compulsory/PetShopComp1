@@ -6,15 +6,9 @@ namespace PetShop.Infrastructure.Data.Repositories
 {
     public class PetRepository :IPetRepository
     {
-        private readonly FakeDb _fakeDb;
-        public PetRepository()
-        {
-            _fakeDb = new FakeDb();
-        }
-
         public IEnumerable<Pet> ReadPets()
         {
-            return new List<Pet>(_fakeDb.GetPets());
+            return new List<Pet>(FakeDb.GetPets());
         }
     }
 }
