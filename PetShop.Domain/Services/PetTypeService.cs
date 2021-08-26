@@ -17,8 +17,9 @@ namespace PetShop.Domain.Services
 
         public bool CheckIfPetTypeExists(string type)
         {
-            return _repository.ReadPetsTypes().
-                FirstOrDefault(petType => petType.Name.Equals(type)) == null;
+            return _repository.ReadPetsTypes().Any(petType => petType.Name.ToLower().Equals(type.ToLower()));
+            /*return _repository.ReadPetsTypes().ToList().
+                Find(petType => petType.Name.ToLower().Equals(type.ToLower()));*/
         }
 
         public List<PetType> GetPetTypes()
