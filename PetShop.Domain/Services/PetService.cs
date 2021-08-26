@@ -50,5 +50,23 @@ namespace PetShop.Domain.Services
         {
             return _repository.Delete(id);
         }
+
+        public Pet Update(Pet pet)
+        {
+           //we will do all the magic here ....
+           var actualPet = FindPetById(pet.Id);
+           actualPet.Color = pet.Color;
+           actualPet.Name = pet.Name;
+           actualPet.Type = pet.Type;
+           actualPet.BirthDate = pet.BirthDate;
+           actualPet.SoldDate = pet.SoldDate;
+           actualPet.Price = pet.Price;
+           return actualPet;
+        }
+
+        private Pet FindPetById(int petId)
+        {
+            return GetPets().Find(pet => pet.Id == petId);
+        }
     }
 }

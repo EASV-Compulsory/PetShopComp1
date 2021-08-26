@@ -60,6 +60,11 @@ namespace PetShop.UI
                         DeletePet();
                         break;
                     }
+                    case Options.UpdatePet:
+                    {
+                        UpdatePet();
+                        break;
+                    }
                     
                         
                 }
@@ -68,7 +73,6 @@ namespace PetShop.UI
             }
             Print("Bye bye");
         }
-        
 
         #endregion
       
@@ -181,7 +185,7 @@ namespace PetShop.UI
 
         private void CreatePet()
         {
-            GetDataForCreateOperation(out var pet);
+            GetDataForCreateUpdateOperation(out var pet);
             pet =  _petService.Create(pet);
                       
             Console.WriteLine(pet ==null ? "not saved properly. something crashed" :
@@ -189,8 +193,35 @@ namespace PetShop.UI
                 $"{pet.Type?.Name} {pet.Color} {pet.Price}" +
                 $"{pet.BirthDate} {pet.SoldDate}");
         }
+        
+        private void UpdatePet()
+        {
+            Print("Updating a pet ---------");
+            //get id
+            Print("Give id of the pet to update: ");
+            _utils.ReadIntegerFromString(out var id, StringConstants.OnlyNumbersAccepted);
+            while (!_petService.CheckIfPetExistsById(id))
+            {
+                Print("Give existing id of the pet to update: ");
+                _utils.ReadIntegerFromString(out  id, StringConstants.OnlyNumbersAccepted);
+            }
+            GetDataForCreateUpdateOperation(out var pet);
+            pet.Id = id;
+            pet = _petService.Update(pet);
+            
+            Console.WriteLine(pet ==null ? "not updated properly. something crashed" :
+                $"Pet with the following properties updated: {pet.Id} {pet.Name}" +
+                $"{pet.Type?.Name} {pet.Color} {pet.Price}" +
+                $"{pet.BirthDate} {pet.SoldDate}");
+            Print(StringConstants.Line);
+        }
+        
 
-        public void GetDataForCreateOperation(out Pet pet)
+        /// <summary>
+        /// do it in a more graceful way..
+        /// </summary>
+        /// <param name="pet"></param>
+        public void GetDataForCreateUpdateOperation(out Pet pet)
         {
             //Name
             Console.WriteLine("Please give a name: ");
