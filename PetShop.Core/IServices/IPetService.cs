@@ -11,5 +11,7 @@ namespace PetShop.Core.IServices
         
         List<Pet> SortPetsByPriceAsc();
         List<Pet> GetXCheapestPets(int i);
+        bool CheckIfPetExistsById(int id);
+        bool Delete(int id);
     }
 }

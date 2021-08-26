@@ -55,6 +55,11 @@ namespace PetShop.UI
                         GiveFiveCheapestPets();
                         break;
                     }
+                    case Options.DeletePet:
+                    {
+                        DeletePet();
+                        break;
+                    }
                     
                         
                 }
@@ -63,6 +68,7 @@ namespace PetShop.UI
             }
             Print("Bye bye");
         }
+        
 
         #endregion
       
@@ -79,7 +85,20 @@ namespace PetShop.UI
 
 
         #region Get Option from string
+        private void DeletePet()
+        {
+            Print("Please Insert id of the pet you wanna delete: ");
+            _utils.ReadIntegerFromString(out var id, StringConstants.OnlyNumbersAccepted);
+            //check if id even exists
+            while (!_petService.CheckIfPetExistsById(id))
+            {
+                Print("Please Insert existing id of the pet you wanna delete: ");
+                _utils.ReadIntegerFromString(out  id, StringConstants.OnlyNumbersAccepted);
+            }
 
+            var result = _petService.Delete(id);
+            Console.WriteLine(result ? $"Pet with id: {id} was deleted" : $"failed. Pet with id {id} wasnt deleted");
+        }
         public Options GetOptionFromString()
         {
             _utils.ReadIntegerFromString( out var selection,StringConstants.OnlyNumbersAccepted );

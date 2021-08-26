@@ -7,5 +7,6 @@ namespace PetShop.Domain.IRepositories
     {
         IEnumerable<Pet> ReadPets();
         Pet Create(Pet pet);
+        bool Delete(int id);
     }
 }

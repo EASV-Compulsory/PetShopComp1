@@ -15,5 +15,10 @@ namespace PetShop.Infrastructure.Data.Repositories
         {
            return FakeDb.CreatePet(pet);
         }
+
+        public bool Delete(int id)
+        {
+            return FakeDb.DeletePet(id);
+        }
     }
 }

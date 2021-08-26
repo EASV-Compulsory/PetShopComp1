@@ -40,5 +40,15 @@ namespace PetShop.Domain.Services
         {
             return GetPets().OrderBy(pet => pet.Price).Take(5).ToList();
         }
+
+        public bool CheckIfPetExistsById(int id)
+        {
+            return GetPets().FirstOrDefault(pet => pet.Id == id) != null;
+        }
+
+        public bool Delete(int id)
+        {
+            return _repository.Delete(id);
+        }
     }
 }

@@ -15,28 +15,39 @@ namespace PetShop.Infrastructure.Data
         private static int _petTypeId =0;
 
         #region CRUD Pet
-
+        public static IList<Pet> GetPets()
+        {
+            return new List<Pet>(_pets);
+        }
+        
         public static Pet CreatePet(Pet pet)
         {
             pet.Id = ++_petId;
             _pets.Add(pet);
             return pet;
         }
+
+        /// <summary>
+        /// delete operation is handed here not in Repository.
+        /// We cant access private list from other place
+        /// (getter returns only a copy)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static bool DeletePet(int id)
+        {
+            var pet = _pets.Find(p => p.Id == id);
+            return _pets.Remove(pet);
+        }
         
 
         #endregion
 
-        #region get pets and petTypes
-
-        public static IList<Pet> GetPets()
-        {
-            return _pets;
-        }
+        #region CRUD petTypes
         
         public static IList<PetType> GetPetTypes()
         {
-            return _petTypes;
-            //or new List ect
+            return new List<PetType>(_petTypes);
         }
 
 
