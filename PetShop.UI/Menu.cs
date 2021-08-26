@@ -32,60 +32,30 @@ namespace PetShop.UI
                 {
                     case Options.CreatePet:
                     {
-                        GetDataForCreateOperation(out var pet);
-                        pet =  _petService.Create(pet);
-                      
-                       Console.WriteLine(pet ==null ? "not saved properly. something crashed" :
-                           $"Pet with the following properties created: {pet.Id} {pet.Name}" +
-                             $"{pet.Type?.Name} {pet.Color} {pet.Price}" +
-                             $"{pet.BirthDate} {pet.SoldDate}");
-                       break;
+                        CreatePet();
+                        break;
                     }
                     case Options.ShowAllPets:
                     {
-                        Print(StringConstants.ShowAllPetsMessage);
-                        foreach (var pet in _petService.GetPets())
-                        {
-                            Print($"Pet :{pet.Id} {pet.Name}" +
-                                  $" {pet.Type?.Name} {pet.Color} {pet.Price}" +
-                                  $"{pet.BirthDate} {pet.SoldDate}");
-                        }
-                        Print(StringConstants.Line);
+                        ShowAllPets();
                         break;
                     }
                     case Options.SearchPetsByType:
                     {
-                        Print("Please insert query: ");
-                        _utils.GetMinimalStringInput(out var query, 1, StringConstants.ToShort);
-                        var foundPets = _petService.SearchPetsByType(query);
-                        if (foundPets.Count>0)
-                        {
-                            foreach (var pet in foundPets)
-                            {
-                                Console.WriteLine( $"Pet with the following properties found: {pet.Id} {pet.Name}" +
-                                                   $"{pet.Type?.Name} {pet.Color} {pet.Price}" +
-                                                   $"{pet.BirthDate} {pet.SoldDate}");
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine("No pet found");
-                        }
-                         break;
+                        SearchPetsByType();
+                        break;
                     }
                     case Options.SortPetsByPrice:
                     {
-                        var sortedPets = _petService.SortPetsByPriceAsc();
-                        Print("pets sorted by price in ascending order");
-                        foreach (var pet in sortedPets)
-                        {
-                            Print($"Pet :{pet.Id} {pet.Name}" +
-                                  $" {pet.Type?.Name} {pet.Color} Price: {pet.Price} " +
-                                  $" Birthdate: {pet.BirthDate} {pet.SoldDate}");
-                        }
-
+                        SortPetsByPrice();
                         break;
                     }
+                    case Options.GetFiveCheapestPets:
+                    {
+                        GiveFiveCheapestPets();
+                        break;
+                    }
+                    
                         
                 }
                 ShowMainMenu();
@@ -93,7 +63,6 @@ namespace PetShop.UI
             }
             Print("Bye bye");
         }
-        
 
         #endregion
       
@@ -107,8 +76,9 @@ namespace PetShop.UI
         {
             Console.WriteLine(StringConstants.WelcomeGreetings);
         }
-     
-        
+
+
+        #region Get Option from string
 
         public Options GetOptionFromString()
         {
@@ -123,12 +93,84 @@ namespace PetShop.UI
             return (Options)selection;
         }
 
+        #endregion
+        
+
         public void ShowMainMenu()
         {
             Console.WriteLine(StringConstants.PossibleOperations +"\n" + _utils.ConcatPossibleOptions());
         }
 
         #region CRUD helper classes
+        
+        private void GiveFiveCheapestPets()
+        {
+            var fiveCheapest = _petService.GetXCheapestPets(5);
+            Print("five cheapest pets: ");
+            foreach (var pet in fiveCheapest)
+            {
+                Print($"Pet :{pet.Id} {pet.Name}" +
+                      $" {pet.Type?.Name} {pet.Color} Price: {pet.Price} " +
+                      $" Birthdate: {pet.BirthDate} {pet.SoldDate}");
+            }
+        }
+        
+         private void SortPetsByPrice()
+        {
+            var sortedPets = _petService.SortPetsByPriceAsc();
+            Print("pets sorted by price in ascending order");
+            foreach (var pet in sortedPets)
+            {
+                Print($"Pet :{pet.Id} {pet.Name}" +
+                      $" {pet.Type?.Name} {pet.Color} Price: {pet.Price} " +
+                      $" Birthdate: {pet.BirthDate} {pet.SoldDate}");
+            }
+
+        }
+
+        private void SearchPetsByType()
+        {
+            Print("Please insert query: ");
+            _utils.GetMinimalStringInput(out var query, 1, StringConstants.ToShort);
+            var foundPets = _petService.SearchPetsByType(query);
+            if (foundPets.Count>0)
+            {
+                foreach (var pet in foundPets)
+                {
+                    Console.WriteLine( $"Pet with the following properties found: {pet.Id} {pet.Name}" +
+                                       $"{pet.Type?.Name} {pet.Color} {pet.Price}" +
+                                       $"{pet.BirthDate} {pet.SoldDate}");
+                }
+            }
+            else
+            {
+                Console.WriteLine("No pet found");
+            }
+        }
+
+        private void ShowAllPets()
+        {
+            Print(StringConstants.ShowAllPetsMessage);
+            foreach (var pet in _petService.GetPets())
+            {
+                Print($"Pet :{pet.Id} {pet.Name}" +
+                      $" {pet.Type?.Name} {pet.Color} {pet.Price}" +
+                      $"{pet.BirthDate} {pet.SoldDate}");
+            }
+            Print(StringConstants.Line);
+        }
+
+        private void CreatePet()
+        {
+            GetDataForCreateOperation(out var pet);
+            pet =  _petService.Create(pet);
+                      
+            Console.WriteLine(pet ==null ? "not saved properly. something crashed" :
+                $"Pet with the following properties created: {pet.Id} {pet.Name}" +
+                $"{pet.Type?.Name} {pet.Color} {pet.Price}" +
+                $"{pet.BirthDate} {pet.SoldDate}");
+        }
+
         public void GetDataForCreateOperation(out Pet pet)
         {
             //Name

@@ -35,5 +35,10 @@ namespace PetShop.Domain.Services
         {
             return GetPets().OrderBy(pet => pet.Price).ToList();
         }
+
+        public List<Pet> GetXCheapestPets(int i)
+        {
+            return GetPets().OrderBy(pet => pet.Price).Take(5).ToList();
+        }
     }
 }

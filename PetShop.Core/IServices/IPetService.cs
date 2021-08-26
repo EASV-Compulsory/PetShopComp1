@@ -10,5 +10,6 @@ namespace PetShop.Core.IServices
         List<Pet> SearchPetsByType(string userInput);
         
         List<Pet> SortPetsByPriceAsc();
+        List<Pet> GetXCheapestPets(int i);
     }
 }
