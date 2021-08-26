@@ -73,6 +73,19 @@ namespace PetShop.UI
                         }
                          break;
                     }
+                    case Options.SortPetsByPrice:
+                    {
+                        var sortedPets = _petService.SortPetsByPriceAsc();
+                        Print("pets sorted by price in ascending order");
+                        foreach (var pet in sortedPets)
+                        {
+                            Print($"Pet :{pet.Id} {pet.Name}" +
+                                  $" {pet.Type?.Name} {pet.Color} Price: {pet.Price} " +
+                                  $" Birthdate: {pet.BirthDate} {pet.SoldDate}");
+                        }
+
+                        break;
+                    }
                         
                 }
                 ShowMainMenu();

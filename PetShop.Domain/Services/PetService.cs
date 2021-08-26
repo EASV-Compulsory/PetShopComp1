@@ -30,5 +30,10 @@ namespace PetShop.Domain.Services
             return GetPets().
                 FindAll(pet => pet.Type.Name.ToLower().Contains(query.ToLower()));
         }
+
+        public List<Pet> SortPetsByPriceAsc()
+        {
+            return GetPets().OrderBy(pet => pet.Price).ToList();
+        }
     }
 }
