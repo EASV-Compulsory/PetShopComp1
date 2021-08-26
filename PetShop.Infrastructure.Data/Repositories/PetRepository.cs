@@ -10,5 +10,10 @@ namespace PetShop.Infrastructure.Data.Repositories
         {
             return new List<Pet>(FakeDb.GetPets());
         }
+
+        public Pet Create(Pet pet)
+        {
+           return FakeDb.CreatePet(pet);
+        }
     }
 }

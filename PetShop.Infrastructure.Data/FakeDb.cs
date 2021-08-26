@@ -11,10 +11,20 @@ namespace PetShop.Infrastructure.Data
     {
         private static List<Pet> _pets;
         private static List<PetType> _petTypes;
-        private static int _petId =1;
-        private static int _petTypeId =1;
+        private static int _petId =0;
+        private static int _petTypeId =0;
 
+        #region CRUD Pet
+
+        public static Pet CreatePet(Pet pet)
+        {
+            pet.Id = ++_petId;
+            _pets.Add(pet);
+            return pet;
+        }
         
+
+        #endregion
 
         #region get pets and petTypes
 
@@ -40,15 +50,15 @@ namespace PetShop.Infrastructure.Data
 
             var cats = new PetType
             {
-                Id = _petTypeId++, Name = "Cats"
+                Id = ++_petTypeId, Name = "Cats"
             };
             var dogs = new PetType
             {
-                Id = _petTypeId++, Name = "Dogs"
+                Id = ++_petTypeId, Name = "Dogs"
             };
             var birds = new PetType
             {
-                Id = _petTypeId++, Name = "Goats"
+                Id = ++_petTypeId, Name = "Goats"
             };
             _petTypes.Add(cats);
             _petTypes.Add(dogs);
@@ -56,7 +66,7 @@ namespace PetShop.Infrastructure.Data
 
             var lolka = new Pet
             {
-                Id = _petId++,
+                Id = ++_petId,
                 BirthDate = new DateTime(27 / 05 / 2009),
                 Type = dogs,
                 Color = "Black",
@@ -66,7 +76,7 @@ namespace PetShop.Infrastructure.Data
             
             var nikita = new Pet
             {
-                Id = _petId++,
+                Id = ++_petId,
                 BirthDate = new DateTime(27 / 03 / 2014),
                 Type = dogs,
                 Color = "Black",

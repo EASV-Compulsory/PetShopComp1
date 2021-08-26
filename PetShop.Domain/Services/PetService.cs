@@ -19,5 +19,10 @@ namespace PetShop.Domain.Services
         {
             return _repository.ReadPets().ToList();
         }
+
+        public Pet Create(Pet pet)
+        {
+           return _repository.Create(pet);
+        }
     }
 }

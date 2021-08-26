@@ -1,6 +1,6 @@
 ﻿namespace PetShop.UI
 {
-    public interface IPrinter
+    public interface IMenu
     {
         void StartUi();
     }

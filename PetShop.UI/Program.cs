@@ -6,6 +6,7 @@ using PetShop.Domain.Services;
 using PetShop.Infrastructure.Data;
 using PetShop.Infrastructure.Data.Repositories;
 
+
 namespace PetShop.UI
 {
     class Program
@@ -15,12 +16,18 @@ namespace PetShop.UI
             FakeDb.InitData();
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddScoped<IPetRepository, PetRepository>();
+            serviceCollection.AddScoped<IPetTypeRepository, PetTypeRepository>();
+            serviceCollection.AddScoped<IPetTypeService, PetTypeService>();
             serviceCollection.AddScoped<IPetService, PetService>();
-            serviceCollection.AddScoped<IPrinter, Printer>();
-            var serviceProvider = serviceCollection.BuildServiceProvider();
-            var printer = serviceProvider.GetRequiredService<IPrinter>();
-            printer.StartUi();
+            serviceCollection.AddScoped<IUtils, Utils>();
+            serviceCollection.AddScoped<IMenu, Menu>();
             
+            var serviceProvider = serviceCollection.BuildServiceProvider();
+            var menu = serviceProvider.GetRequiredService<IMenu>();
+            menu.StartUi();
+
+
+
         }
     }
 }

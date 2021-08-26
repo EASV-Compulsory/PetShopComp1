@@ -6,5 +6,6 @@ namespace PetShop.Core.IServices
     public interface IPetService
     {
         List<Pet> GetPets();
+        Pet Create(Pet pet);
     }
 }
