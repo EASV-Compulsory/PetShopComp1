@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.VisualBasic;
 using PetShop.Core.IServices;
 using PetShop.Core.Models;
@@ -8,8 +9,8 @@ namespace PetShop.UI
     public class Menu : IMenu
     {
         private readonly IUtils _utils;
-        private IPetService _petService;
-        private IPetTypeService _petTypeService;
+        private readonly IPetService _petService;
+        private readonly IPetTypeService _petTypeService;
         
 
         public Menu(IUtils utils, IPetService petService, IPetTypeService petTypeService)
@@ -21,7 +22,11 @@ namespace PetShop.UI
 
         #region SWITCH for CRUD operations
         
-        public void  StartUi()
+        /// <summary>
+        /// We could do better to follow open closed principle
+        /// later we can rebuild it to factory and take advantage of polymorphism. 
+        /// </summary>
+        public void StartUi()
         {
             ShowGreetings();
             ShowMainMenu();
@@ -60,7 +65,7 @@ namespace PetShop.UI
                         DeletePet();
                         break;
                     }
-                    case Options.UpdatePet:
+                    case Options.UpdatePet: 
                     {
                         UpdatePet();
                         break;
@@ -77,33 +82,19 @@ namespace PetShop.UI
         #endregion
       
         
-        private void Print(string value)
+        private static void Print(string value)
         {
             Console.WriteLine(value);
         }
         
-        private void ShowGreetings()
+        private static void ShowGreetings()
         {
             Console.WriteLine(StringConstants.WelcomeGreetings);
         }
 
 
         #region Get Option from string
-        private void DeletePet()
-        {
-            Print("Please Insert id of the pet you wanna delete: ");
-            _utils.ReadIntegerFromString(out var id, StringConstants.OnlyNumbersAccepted);
-            //check if id even exists
-            while (!_petService.CheckIfPetExistsById(id))
-            {
-                Print("Please Insert existing id of the pet you wanna delete: ");
-                _utils.ReadIntegerFromString(out  id, StringConstants.OnlyNumbersAccepted);
-            }
-
-            var result = _petService.Delete(id);
-            Console.WriteLine(result ? $"Pet with id: {id} was deleted" : $"failed. Pet with id {id} wasnt deleted");
-        }
-        public Options GetOptionFromString()
+        private Options GetOptionFromString()
         {
             _utils.ReadIntegerFromString( out var selection,StringConstants.OnlyNumbersAccepted );
             while (!Enum.IsDefined(typeof(Options), selection))
@@ -119,50 +110,76 @@ namespace PetShop.UI
         #endregion
         
 
-        public void ShowMainMenu()
+        private void ShowMainMenu()
         {
             Console.WriteLine(StringConstants.PossibleOperations +"\n" + _utils.ConcatPossibleOptions());
         }
 
-        #region CRUD helper classes
+        #region delete pet
+        private void DeletePet()
+        {
+            Print("Please Insert id of the pet you wanna delete: ");
+            _utils.ReadIntegerFromString(out var id, StringConstants.OnlyNumbersAccepted);
+            //check if id even exists
+            while (!_petService.CheckIfPetExistsById(id))
+            {
+                Print("Please Insert existing id of the pet you wanna delete: ");
+                _utils.ReadIntegerFromString(out  id, StringConstants.OnlyNumbersAccepted);
+            }
+
+            var result = _petService.Delete(id);
+            Console.WriteLine(result ? $"Pet with id: {id} was deleted" : $"failed. Pet with id {id} wasn't deleted");
+        }
         
+
+        #endregion
+
+        #region give five cheapest pets
         private void GiveFiveCheapestPets()
         {
             var fiveCheapest = _petService.GetXCheapestPets(5);
             Print("five cheapest pets: ");
             foreach (var pet in fiveCheapest)
             {
-                Print($"Pet :{pet.Id} {pet.Name}" +
-                      $" {pet.Type?.Name} {pet.Color} Price: {pet.Price} " +
-                      $" Birthdate: {pet.BirthDate} {pet.SoldDate}");
+                PrintPet(pet, "Pet: ");
             }
         }
         
-         private void SortPetsByPrice()
+
+        #endregion
+
+        #region sort pets by price in ascrending order
+        private void SortPetsByPrice()
         {
             var sortedPets = _petService.SortPetsByPriceAsc();
             Print("pets sorted by price in ascending order");
             foreach (var pet in sortedPets)
             {
-                Print($"Pet :{pet.Id} {pet.Name}" +
-                      $" {pet.Type?.Name} {pet.Color} Price: {pet.Price} " +
-                      $" Birthdate: {pet.BirthDate} {pet.SoldDate}");
+                PrintPet(pet, "Pet: ");
             }
 
         }
+        
 
+        #endregion
+
+        #region search pets by type
         private void SearchPetsByType()
         {
             Print("Please insert query: ");
             _utils.GetMinimalStringInput(out var query, 1, StringConstants.ToShort);
             var foundPets = _petService.SearchPetsByType(query);
+            ShowPetsQueriedByType(foundPets);
+           
+        }
+
+        private void ShowPetsQueriedByType(List<Pet> foundPets)
+        {
             if (foundPets.Count>0)
             {
                 foreach (var pet in foundPets)
                 {
-                    Console.WriteLine( $"Pet with the following properties found: {pet.Id} {pet.Name}" +
-                                       $"{pet.Type?.Name} {pet.Color} {pet.Price}" +
-                                       $"{pet.BirthDate} {pet.SoldDate}");
+                    PrintPet(pet, "Pet with the following properties found: ");
                 }
             }
             else
@@ -171,33 +188,63 @@ namespace PetShop.UI
             }
         }
 
+        #endregion
+
+        #region print infromation about pet
+
+        private static void PrintPet(Pet pet, string messageToShowBeforehand, string infoCrash)
+        {
+            if (pet == null)
+            {
+                Print(infoCrash);
+            }
+            PrintPet(pet, messageToShowBeforehand);
+        }
+
+        private static void PrintPet(Pet pet, string messageToShowBeforehand)
+        {
+            Console.WriteLine( $"{messageToShowBeforehand} {pet.Id} Name: {pet.Name}" +
+                               $" Type: {pet.Type?.Name} Color: {pet.Color} Price: {pet.Price}" +
+                               $" BirthDate: {pet.BirthDate} SoldDate: {pet.SoldDate}");
+        }
+        
+
+        #endregion
+        
+
+        
+
+        #region R from CRUD pets
         private void ShowAllPets()
         {
             Print(StringConstants.ShowAllPetsMessage);
             foreach (var pet in _petService.GetPets())
             {
-                Print($"Pet :{pet.Id} {pet.Name}" +
-                      $" {pet.Type?.Name} {pet.Color} {pet.Price}" +
-                      $"{pet.BirthDate} {pet.SoldDate}");
+                PrintPet(pet, "Pet: ");
             }
             Print(StringConstants.Line);
         }
+        
 
+        #endregion
+
+        #region C from CRUD pets
         private void CreatePet()
         {
             GetDataForCreateUpdateOperation(out var pet);
             pet =  _petService.Create(pet);
-                      
-            Console.WriteLine(pet ==null ? "not saved properly. something crashed" :
-                $"Pet with the following properties created: {pet.Id} {pet.Name}" +
-                $"{pet.Type?.Name} {pet.Color} {pet.Price}" +
-                $"{pet.BirthDate} {pet.SoldDate}");
+            PrintPet(pet, "Pet with the following properties created:", 
+                "not saved properly. something crashed");
+            
         }
         
+
+        #endregion
+
+        #region U from CRUD pets
         private void UpdatePet()
         {
             Print("Updating a pet ---------");
-            //get id
             Print("Give id of the pet to update: ");
             _utils.ReadIntegerFromString(out var id, StringConstants.OnlyNumbersAccepted);
             while (!_petService.CheckIfPetExistsById(id))
@@ -209,62 +256,87 @@ namespace PetShop.UI
             pet.Id = id;
             pet = _petService.Update(pet);
             
-            Console.WriteLine(pet ==null ? "not updated properly. something crashed" :
-                $"Pet with the following properties updated: {pet.Id} {pet.Name}" +
-                $"{pet.Type?.Name} {pet.Color} {pet.Price}" +
-                $"{pet.BirthDate} {pet.SoldDate}");
+            PrintPet(pet, "Pet with the following properties updated:", "not updated properly. something crashed");
+           
             Print(StringConstants.Line);
         }
+        #endregion
         
-
-        /// <summary>
-        /// do it in a more graceful way..
-        /// </summary>
-        /// <param name="pet"></param>
-        public void GetDataForCreateUpdateOperation(out Pet pet)
+        #region CRUD helper classes for Create and Update Pet
+        
+        private void GetDataForCreateUpdateOperation(out Pet pet)
         {
-            //Name
-            Console.WriteLine("Please give a name: ");
-           _utils.GetMinimalStringInput(out var name,3, StringConstants.ToShort);
-           
-           //Type
-           Console.WriteLine("Please give a type: ");
-           //show possible types
-           Console.WriteLine("Available pet types: ");
-           foreach (var element in _petTypeService.GetPetTypes())
+            pet = new Pet
            {
-               Print(element.Name);
-           }
-           _utils.GetMinimalStringInput(out var type,3, StringConstants.ToShort);
-           //check if such type exists
-           while (!_petTypeService.CheckIfPetTypeExists(type))
-           {
-               Console.WriteLine("Please give correct type: ");
-               _utils.GetMinimalStringInput(out  type,3, StringConstants.ToShort);
-           }
-
-           _petTypeService.GetPetTypeByName(type, out var petType);
-           
-           //BirthDate
-           Print("give birthdate");
-           _utils.GetDateInput(out var birthdate);
-           Print("give solddate");
-           _utils.GetDateInput(out var soldDate);
-           //later validate if birthdate > soldDate
-           //Color && Price
-           Print("Give color");
-           _utils.GetMinimalStringInput(out var color, 3, StringConstants.ToShort);
-           Print("give price");
-           _utils.ReadDoubleFromString(out var price, StringConstants.NotDouble);
-           //validate price. It should be bigger than zero
-
-           pet = new Pet
-           {
-               Name = name, Type = petType, BirthDate = birthdate,
-               SoldDate = soldDate, Color = color, Price = price
+               Name = GetName(), Type = GetPetType(), BirthDate = GetBirthdate(out var b),
+               SoldDate = GetSoldDate(b), Color = GetColor(), Price = GetPrice()
            };
         }
-        
+
+        private double GetPrice()
+        {
+            Print("give price");
+            _utils.ReadDoubleFromString(out var price, StringConstants.NotDouble);
+            while (price <= 0)
+            {
+                Print(StringConstants.Price);
+                _utils.ReadDoubleFromString(out price, StringConstants.NotDouble); 
+            }
+
+            return price;
+        }
+
+        private string GetColor()
+        {
+            Print("Give color");
+            _utils.GetMinimalStringInput(out var color, 3, StringConstants.ToShort);
+            return color;
+        }
+
+        private DateTime GetSoldDate( DateTime birthdate)
+        {
+            Print("give sold date");
+            _utils.GetDateInput(out var soldDate);
+            while (DateTime.Compare(soldDate, birthdate)<0)
+            {
+                Print("give sold date that is later than birthdate");
+                _utils.GetDateInput(out  soldDate);
+            }
+            return soldDate;
+        }
+
+        private DateTime GetBirthdate(out DateTime birthdate1)
+        {
+            Print("give birthdate");
+            _utils.GetDateInput(out var birthdate);
+            birthdate1 = birthdate;
+            return birthdate;
+        }
+
+        private PetType GetPetType()
+        {
+            Console.WriteLine("Please give pet type. Below are available pet types ");
+            foreach (var element in _petTypeService.GetPetTypes())
+            {
+                Print(element.Name);
+            }
+            _utils.GetMinimalStringInput(out var type,3, StringConstants.ToShort);
+            while (!_petTypeService.CheckIfPetTypeExists(type))
+            {
+                Console.WriteLine("Please give correct type: ");
+                _utils.GetMinimalStringInput(out  type,3, StringConstants.ToShort);
+            }
+
+            _petTypeService.GetPetTypeByName(type, out var petType);
+            return petType;
+        }
+
+        private string GetName()
+        {
+            Console.WriteLine("Please give a name: ");
+            _utils.GetMinimalStringInput(out var name,3, StringConstants.ToShort);
+            return name;
+        }
 
         #endregion
         
