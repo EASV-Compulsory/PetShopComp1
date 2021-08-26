@@ -24,5 +24,11 @@ namespace PetShop.Domain.Services
         {
            return _repository.Create(pet);
         }
+
+        public List<Pet> SearchPetsByType(string query)
+        {
+            return GetPets().
+                FindAll(pet => pet.Type.Name.ToLower().Contains(query.ToLower()));
+        }
     }
 }

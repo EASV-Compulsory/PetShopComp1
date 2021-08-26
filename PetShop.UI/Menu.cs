@@ -31,7 +31,7 @@ namespace PetShop.UI
                 switch (selection)
                 {
                     case Options.CreatePet:
-                    { 
+                    {
                         GetDataForCreateOperation(out var pet);
                         pet =  _petService.Create(pet);
                       
@@ -52,6 +52,26 @@ namespace PetShop.UI
                         }
                         Print(StringConstants.Line);
                         break;
+                    }
+                    case Options.SearchPetsByType:
+                    {
+                        Print("Please insert query: ");
+                        _utils.GetMinimalStringInput(out var query, 1, StringConstants.ToShort);
+                        var foundPets = _petService.SearchPetsByType(query);
+                        if (foundPets.Count>0)
+                        {
+                            foreach (var pet in foundPets)
+                            {
+                                Console.WriteLine( $"Pet with the following properties found: {pet.Id} {pet.Name}" +
+                                                   $"{pet.Type?.Name} {pet.Color} {pet.Price}" +
+                                                   $"{pet.BirthDate} {pet.SoldDate}");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("No pet found");
+                        }
+                         break;
                     }
                         
                 }

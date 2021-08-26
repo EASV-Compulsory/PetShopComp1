@@ -7,5 +7,6 @@ namespace PetShop.Core.IServices
     {
         List<Pet> GetPets();
         Pet Create(Pet pet);
+        List<Pet> SearchPetsByType(string userInput);
     }
 }
