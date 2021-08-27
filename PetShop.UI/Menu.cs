@@ -11,13 +11,16 @@ namespace PetShop.UI
         private readonly IUtils _utils;
         private readonly IPetService _petService;
         private readonly IPetTypeService _petTypeService;
+        private readonly IOwnerService _ownerService;
         
 
-        public Menu(IUtils utils, IPetService petService, IPetTypeService petTypeService)
+        public Menu(IUtils utils, IPetService petService, IPetTypeService petTypeService, 
+            IOwnerService ownerService)
         {
             _utils = utils;
             _petService = petService;
             _petTypeService = petTypeService;
+            _ownerService = ownerService;
         }
 
         #region SWITCH for CRUD operations
@@ -214,15 +217,14 @@ namespace PetShop.UI
 
         private static void PrintPet(Pet pet, string messageToShowBeforehand)
         {
-            Console.WriteLine( $"{messageToShowBeforehand} {pet.Id}, Name: {pet.Name}," +
+            Console.WriteLine(
+                $"{messageToShowBeforehand} {pet.Id}, Name: {pet.Name}, Previews Owner: {pet.PreviousOwner?.FirstName}" +
                                $" Type: {pet.Type?.Name}, Color: {pet.Color}, Price: {pet.Price}, " +
                                $"BirthDate: {pet.BirthDate :d MMMM, yyyy}, SoldDate: {pet.SoldDate :d MMMM, yyyy}");
         }
         
 
         #endregion
-        
-
         
 
         #region R from CRUD pets
@@ -278,9 +280,39 @@ namespace PetShop.UI
         {
             pet = new Pet
            {
-               Name = GetName(), Type = GetPetType(), BirthDate = GetBirthdate(out var b),
+               Name = GetName(), PreviousOwner = GetPreviewsOwner(),  Type = GetPetType(), BirthDate = GetBirthdate(out var b),
                SoldDate = GetSoldDate(b), Color = GetColor(), Price = GetPrice()
            };
+        }
+
+        private Owner GetPreviewsOwner()
+        {
+           Print("Please insert id of previews owner. Available owners are shown below");
+           ShowAvailableOwners();
+           _utils.ReadIntegerFromString(out var id, StringConstants.OnlyNumbersAccepted);
+           var owner = _ownerService.GetOwnerById(id);
+           while (owner == null)
+           {
+               Print("plase insert id of existing owner: ");
+               _utils.ReadIntegerFromString(out id, StringConstants.OnlyNumbersAccepted);
+               owner = _ownerService.GetOwnerById(id);
+           }
+
+           return owner;
+        }
+
+        private void ShowAvailableOwners()
+        {
+            foreach (var owner in _ownerService.GetOwners()) // we have to create an Owner service. 
+            {
+                PrintOwner(owner);
+            }
+        }
+
+        private void PrintOwner(Owner owner)
+        {
+            Print($"Owner: Id: {owner.Id}, Name: {owner.FirstName}," +
+                              $" Second Name: {owner.LastName}, Email: {owner.Email}, Phone no: {owner.PhoneNumber}");
         }
 
         private double GetPrice()

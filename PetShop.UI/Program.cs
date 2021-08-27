@@ -19,6 +19,8 @@ namespace PetShop.UI
             serviceCollection.AddScoped<IPetTypeRepository, PetTypeRepository>();
             serviceCollection.AddScoped<IPetTypeService, PetTypeService>();
             serviceCollection.AddScoped<IPetService, PetService>();
+            serviceCollection.AddScoped<IOwnerService, OwnerService>();
+            serviceCollection.AddScoped<IOwnerRepository, OwnerRepository>();
             serviceCollection.AddScoped<IUtils, Utils>();
             serviceCollection.AddScoped<IMenu, Menu>();
             

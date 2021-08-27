@@ -4,11 +4,11 @@ using PetShop.Domain.IRepositories;
 
 namespace PetShop.Infrastructure.Data.Repositories
 {
-    public class PetTypeRepository :IPetTypeRepository
+    public class OwnerRepository: IOwnerRepository
     {
-        public IEnumerable<PetType> ReadPetsTypes()
+        public IEnumerable<Owner> ReadAll()
         {
-            return FakeDb.GetPetTypes();
+            return FakeDb.GetOwners();
         }
     }
 }

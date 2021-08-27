@@ -8,7 +8,7 @@ namespace PetShop.Infrastructure.Data.Repositories
     {
         public IEnumerable<Pet> ReadPets()
         {
-            return new List<Pet>(FakeDb.GetPets());
+            return FakeDb.GetPets();
         }
 
         public Pet Create(Pet pet)
