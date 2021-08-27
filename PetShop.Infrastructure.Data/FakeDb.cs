@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using PetShop.Core.Models;
 
 namespace PetShop.Infrastructure.Data
@@ -11,11 +12,13 @@ namespace PetShop.Infrastructure.Data
     {
         private static List<Pet> _pets;
         private static List<PetType> _petTypes;
+        private static List<Owner> _owners;
         private static int _petId =0;
         private static int _petTypeId =0;
+        private static int _ownerId = 0;
 
         #region CRUD Pet
-        public static IList<Pet> GetPets()
+        public static IEnumerable<Pet> GetPets()
         {
             return new List<Pet>(_pets);
         }
@@ -25,6 +28,11 @@ namespace PetShop.Infrastructure.Data
             pet.Id = ++_petId;
             _pets.Add(pet);
             return pet;
+        }
+        
+        public static IEnumerable<Owner> GetOwners()
+        {
+            return new List<Owner>(_owners);
         }
 
         /// <summary>
@@ -45,7 +53,7 @@ namespace PetShop.Infrastructure.Data
 
         #region CRUD petTypes
         
-        public static IList<PetType> GetPetTypes()
+        public static IEnumerable<PetType> GetPetTypes()
         {
             return new List<PetType>(_petTypes);
         }
@@ -56,9 +64,94 @@ namespace PetShop.Infrastructure.Data
         #region Init data
         public static void InitData()
         {
-            _petTypes = new List<PetType>();
-            _pets = new List<Pet>();
+            InitOwners();
+            InitPetTypes();
+            InitPets();
+           
 
+        }
+
+      
+
+        #endregion
+
+        #region init pets
+        private static void InitPets()
+        {
+            var lolka = new Pet
+            {
+                Id = ++_petId,
+                BirthDate = new DateTime(2020, 05, 06),
+                Type = _petTypes.ElementAt(0),
+                Color = "Black",
+                Name = "Lolka", Price = 600.0,
+                SoldDate = new DateTime(2022, 06, 05),
+                PreviousOwner = _owners.ElementAt(0)
+            };
+            
+            var nikita = new Pet
+            {
+                Id = ++_petId,
+                BirthDate = new DateTime(2014,  03 ,  27),
+                Type = _petTypes.ElementAt(1),
+                Color = "Black",
+                Name = "Nikita", Price = 2000.0,
+                SoldDate = new DateTime(2015 ,  05 , 23),
+                PreviousOwner = _owners.ElementAt(1)
+            };
+            
+            var bPet = new Pet
+            {
+                Id = ++_petId,
+                BirthDate = new DateTime(2014,  03 ,  27),
+                Type = _petTypes.ElementAt(2),
+                Color = "grey",
+                Name = "Borys", Price = 200000.0,
+                SoldDate = new DateTime(2017 ,  05 , 23),
+                PreviousOwner = _owners.ElementAt(0)
+            };
+            
+            var cPet = new Pet
+            {
+                Id = ++_petId,
+                BirthDate = new DateTime(2014,  03 ,  27),
+                Type = _petTypes.ElementAt(0),
+                Color = "green",
+                Name = "jack", Price = 400.0,
+                SoldDate = new DateTime(2015 ,  05 , 23),
+                PreviousOwner = _owners.ElementAt(2)
+            };
+            
+            var dPet = new Pet
+            {
+                Id = ++_petId,
+                BirthDate = new DateTime(2014,  03 ,  27),
+                Type = _petTypes.ElementAt(0),
+                Color = "white",
+                Name = "Nana", Price = 3000.0,
+                SoldDate = new DateTime(2015 ,  06 , 23),
+                PreviousOwner = _owners.ElementAt(1)
+            };
+            
+            var ePet = new Pet
+            {
+                Id = ++_petId,
+                BirthDate = new DateTime(2014,  03 ,  27),
+                Type = _petTypes.ElementAt(2),
+                Color = "Black",
+                Name = "origin", Price = 3000000.0,
+                SoldDate = new DateTime(2015 ,  05 , 23),
+                PreviousOwner = _owners.ElementAt(2)
+            };
+            _pets = new List<Pet>(){lolka, nikita, bPet, cPet, dPet, ePet};
+        }
+        
+
+        #endregion
+
+        #region init pet types
+        private static void InitPetTypes()
+        {
             var cats = new PetType
             {
                 Id = ++_petTypeId, Name = "Cats"
@@ -67,82 +160,50 @@ namespace PetShop.Infrastructure.Data
             {
                 Id = ++_petTypeId, Name = "Dogs"
             };
-            var birds = new PetType
+            var goats = new PetType
             {
                 Id = ++_petTypeId, Name = "Goats"
             };
-            _petTypes.Add(cats);
-            _petTypes.Add(dogs);
-            _petTypes.Add(birds);
-
-            var lolka = new Pet
-            {
-                Id = ++_petId,
-                BirthDate = new DateTime(2020, 05, 06),
-                Type = dogs,
-                Color = "Black",
-                Name = "Lolka", Price = 600.0,
-                SoldDate = new DateTime(2022, 06, 05)
-            };
-            
-            var nikita = new Pet
-            {
-                Id = ++_petId,
-                BirthDate = new DateTime(2014,  03 ,  27),
-                Type = dogs,
-                Color = "Black",
-                Name = "Nikita", Price = 2000.0,
-                SoldDate = new DateTime(2015 ,  05 , 23)
-            };
-            
-            var bPet = new Pet
-            {
-                Id = ++_petId,
-                BirthDate = new DateTime(2014,  03 ,  27),
-                Type = dogs,
-                Color = "grey",
-                Name = "Borys", Price = 200000.0,
-                SoldDate = new DateTime(2017 ,  05 , 23)
-            };
-            
-            var cPet = new Pet
-            {
-                Id = ++_petId,
-                BirthDate = new DateTime(2014,  03 ,  27),
-                Type = dogs,
-                Color = "green",
-                Name = "jack", Price = 400.0,
-                SoldDate = new DateTime(2015 ,  05 , 23)
-            };
-            
-            var dPet = new Pet
-            {
-                Id = ++_petId,
-                BirthDate = new DateTime(2014,  03 ,  27),
-                Type = dogs,
-                Color = "white",
-                Name = "Nana", Price = 3000.0,
-                SoldDate = new DateTime(2015 ,  06 , 23)
-            };
-            
-            var ePet = new Pet
-            {
-                Id = ++_petId,
-                BirthDate = new DateTime(2014,  03 ,  27),
-                Type = dogs,
-                Color = "Black",
-                Name = "origin", Price = 3000000.0,
-                SoldDate = new DateTime(2015 ,  05 , 23)
-            };
-            _pets.Add(lolka);
-            _pets.Add(nikita);
-            _pets.Add(bPet);
-            _pets.Add(cPet);
-            _pets.Add(dPet);
-            _pets.Add(ePet);
-
+            _petTypes = new List<PetType>(){cats, dogs, goats};
         }
+        
         #endregion
 
+        #region Init owners
+        private static void InitOwners()
+        {
+            var o1 = new Owner
+            {
+                Address = "Esbjerg",
+                Email = "o1@gmail.com",
+                FirstName = "Tom",
+                Id = ++_ownerId,
+                LastName = "co",
+                PhoneNumber = "800-900-100"
+            };
+            var o2 = new Owner
+            {
+                Address = "Aarhus",
+                Email = "o2@gmail.com",
+                FirstName = "Tim",
+                Id = ++_ownerId,
+                LastName = "cowy",
+                PhoneNumber = "801-910-100"
+            };
+            var o3 = new Owner
+            {
+                Address = "Kolding",
+                Email = "o3@gmail.com",
+                FirstName = "Ania",
+                Id = ++_ownerId,
+                LastName = "buda",
+                PhoneNumber = "811-911-101"
+            };
+            _owners = new List<Owner>() {o1, o2, o3};
+        }
+        
+
+        #endregion
+        
     }
 }
