@@ -173,6 +173,11 @@ namespace PetShop.UI
         {
             ShowAvailableTypes("Please insert query. Below are available options");
             _utils.GetMinimalStringInput(out var query, 1, StringConstants.ToShort);
+            while (!_petTypeService.CheckIfPetTypeExists(query))
+            {
+                ShowAvailableTypes("Please insert existing type. Below are available options");
+                _utils.GetMinimalStringInput(out  query, 1, StringConstants.ToShort);
+            }
             var foundPets = _petService.SearchPetsByType(query);
             ShowPetsQueriedByType(foundPets);
            
