@@ -36,45 +36,53 @@ namespace PetShop.UI
             var selection = GetOptionFromString();
             while (selection != Options.Exit)
             {
-                switch (selection)
+                if (selection != Options.CreatePet && !CheckIfThereAreAnyPets())
                 {
-                    case Options.CreatePet:
+                   Print($"No pets in database. Please add pets to do {Enum.GetName(selection)} operation");
+                }
+                else
+                {
+
+                    switch (selection)
                     {
-                        CreatePet();
-                        break;
+                        case Options.CreatePet:
+                        {
+                            CreatePet();
+                            break;
+                        }
+                        case Options.ShowAllPets:
+                        {
+                            ShowAllPets();
+                            break;
+                        }
+                        case Options.SearchPetsByType:
+                        {
+                            SearchPetsByType();
+                            break;
+                        }
+                        case Options.SortPetsByPrice:
+                        {
+                            SortPetsByPrice();
+                            break;
+                        }
+                        case Options.GetFiveCheapestPets:
+                        {
+                            GiveFiveCheapestPets();
+                            break;
+                        }
+                        case Options.DeletePet:
+                        {
+                            DeletePet();
+                            break;
+                        }
+                        case Options.UpdatePet:
+                        {
+                            UpdatePet();
+                            break;
+                        }
+
+
                     }
-                    case Options.ShowAllPets:
-                    {
-                        ShowAllPets();
-                        break;
-                    }
-                    case Options.SearchPetsByType:
-                    {
-                        SearchPetsByType();
-                        break;
-                    }
-                    case Options.SortPetsByPrice:
-                    {
-                        SortPetsByPrice();
-                        break;
-                    }
-                    case Options.GetFiveCheapestPets:
-                    {
-                        GiveFiveCheapestPets();
-                        break;
-                    }
-                    case Options.DeletePet:
-                    {
-                        DeletePet();
-                        break;
-                    }
-                    case Options.UpdatePet: 
-                    {
-                        UpdatePet();
-                        break;
-                    }
-                    
-                        
                 }
                 ShowMainMenu();
                 selection = GetOptionFromString();
@@ -83,7 +91,15 @@ namespace PetShop.UI
         }
 
         #endregion
-      
+
+        #region check if there are any pets in repo
+
+        private bool CheckIfThereAreAnyPets()
+        {
+            return _petService.AreThereAny();
+        }
+        
+        #endregion
         
         private static void Print(string value)
         {

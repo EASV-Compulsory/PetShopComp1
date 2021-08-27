@@ -64,6 +64,11 @@ namespace PetShop.Domain.Services
            return actualPet;
         }
 
+        public bool AreThereAny()
+        {
+            return GetPets().Count > 0;
+        }
+
         private Pet FindPetById(int petId)
         {
             return GetPets().Find(pet => pet.Id == petId);

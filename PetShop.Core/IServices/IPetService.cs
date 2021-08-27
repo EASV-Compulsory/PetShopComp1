@@ -14,5 +14,6 @@ namespace PetShop.Core.IServices
         bool CheckIfPetExistsById(int id);
         bool Delete(int id);
         Pet Update(Pet pet);
+        bool AreThereAny();
     }
 }
