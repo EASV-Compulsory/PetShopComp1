@@ -28,7 +28,7 @@ namespace PetShop.Domain.Services
         public List<Pet> SearchPetsByType(string query)
         {
             return GetPets().
-                FindAll(pet => pet.Type.Name.ToLower().Contains(query.ToLower()));
+                FindAll(pet => pet.Type.Name.ToLower().Equals(query.ToLower()));
         }
 
         public List<Pet> SortPetsByPriceAsc()

@@ -112,7 +112,9 @@ namespace PetShop.UI
 
         private void ShowMainMenu()
         {
+            Print(StringConstants.Line);
             Console.WriteLine(StringConstants.PossibleOperations +"\n" + _utils.ConcatPossibleOptions());
+            Print(StringConstants.Line);
         }
 
         #region delete pet
@@ -166,11 +168,20 @@ namespace PetShop.UI
         #region search pets by type
         private void SearchPetsByType()
         {
-            Print("Please insert query: ");
+            ShowAvailableTypes("Please insert query. Below are available options");
             _utils.GetMinimalStringInput(out var query, 1, StringConstants.ToShort);
             var foundPets = _petService.SearchPetsByType(query);
             ShowPetsQueriedByType(foundPets);
            
+        }
+
+        private void ShowAvailableTypes(string message)
+        {
+            Print(message);
+            foreach (var element in _petTypeService.GetPetTypes())
+            {
+                Print(element.Name);
+            }
         }
 
         private void ShowPetsQueriedByType(List<Pet> foundPets)
@@ -203,9 +214,9 @@ namespace PetShop.UI
 
         private static void PrintPet(Pet pet, string messageToShowBeforehand)
         {
-            Console.WriteLine( $"{messageToShowBeforehand} {pet.Id} Name: {pet.Name}" +
-                               $" Type: {pet.Type?.Name} Color: {pet.Color} Price: {pet.Price}" +
-                               $" BirthDate: {pet.BirthDate} SoldDate: {pet.SoldDate}");
+            Console.WriteLine( $"{messageToShowBeforehand} {pet.Id}, Name: {pet.Name}," +
+                               $" Type: {pet.Type?.Name}, Color: {pet.Color}, Price: {pet.Price}, " +
+                               $"BirthDate: {pet.BirthDate :d MMMM, yyyy}, SoldDate: {pet.SoldDate :d MMMM, yyyy}");
         }
         
 
@@ -222,7 +233,6 @@ namespace PetShop.UI
             {
                 PrintPet(pet, "Pet: ");
             }
-            Print(StringConstants.Line);
         }
         
 
@@ -295,11 +305,11 @@ namespace PetShop.UI
 
         private DateTime GetSoldDate( DateTime birthdate)
         {
-            Print("give sold date");
+            Print($"give sold date {StringConstants.CorrectDateFormat}");
             _utils.GetDateInput(out var soldDate);
             while (DateTime.Compare(soldDate, birthdate)<0)
             {
-                Print("give sold date that is later than birthdate");
+                Print($"give sold date that is later than birthdate {StringConstants.CorrectDateFormat}");
                 _utils.GetDateInput(out  soldDate);
             }
             return soldDate;
@@ -307,7 +317,7 @@ namespace PetShop.UI
 
         private DateTime GetBirthdate(out DateTime birthdate1)
         {
-            Print("give birthdate");
+            Print($"give birthdate {StringConstants.CorrectDateFormat}");
             _utils.GetDateInput(out var birthdate);
             birthdate1 = birthdate;
             return birthdate;
@@ -315,11 +325,7 @@ namespace PetShop.UI
 
         private PetType GetPetType()
         {
-            Console.WriteLine("Please give pet type. Below are available pet types ");
-            foreach (var element in _petTypeService.GetPetTypes())
-            {
-                Print(element.Name);
-            }
+            ShowAvailableTypes("Please give pet type. Below are available pet types ");
             _utils.GetMinimalStringInput(out var type,3, StringConstants.ToShort);
             while (!_petTypeService.CheckIfPetTypeExists(type))
             {

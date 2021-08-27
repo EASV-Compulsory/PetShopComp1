@@ -11,7 +11,7 @@ namespace PetShop.UI
 {
     class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             FakeDb.InitData();
             var serviceCollection = new ServiceCollection();

@@ -78,24 +78,68 @@ namespace PetShop.Infrastructure.Data
             var lolka = new Pet
             {
                 Id = ++_petId,
-                BirthDate = new DateTime(27 / 05 / 2009),
+                BirthDate = new DateTime(2020, 05, 06),
                 Type = dogs,
                 Color = "Black",
                 Name = "Lolka", Price = 600.0,
-                SoldDate = new DateTime(02 / 02 / 2010)
+                SoldDate = new DateTime(2022, 06, 05)
             };
             
             var nikita = new Pet
             {
                 Id = ++_petId,
-                BirthDate = new DateTime(27 / 03 / 2014),
+                BirthDate = new DateTime(2014,  03 ,  27),
                 Type = dogs,
                 Color = "Black",
                 Name = "Nikita", Price = 2000.0,
-                SoldDate = new DateTime(27 / 05 / 2014)
+                SoldDate = new DateTime(2015 ,  05 , 23)
+            };
+            
+            var bPet = new Pet
+            {
+                Id = ++_petId,
+                BirthDate = new DateTime(2014,  03 ,  27),
+                Type = dogs,
+                Color = "grey",
+                Name = "Borys", Price = 200000.0,
+                SoldDate = new DateTime(2017 ,  05 , 23)
+            };
+            
+            var cPet = new Pet
+            {
+                Id = ++_petId,
+                BirthDate = new DateTime(2014,  03 ,  27),
+                Type = dogs,
+                Color = "green",
+                Name = "jack", Price = 400.0,
+                SoldDate = new DateTime(2015 ,  05 , 23)
+            };
+            
+            var dPet = new Pet
+            {
+                Id = ++_petId,
+                BirthDate = new DateTime(2014,  03 ,  27),
+                Type = dogs,
+                Color = "white",
+                Name = "Nana", Price = 3000.0,
+                SoldDate = new DateTime(2015 ,  06 , 23)
+            };
+            
+            var ePet = new Pet
+            {
+                Id = ++_petId,
+                BirthDate = new DateTime(2014,  03 ,  27),
+                Type = dogs,
+                Color = "Black",
+                Name = "origin", Price = 3000000.0,
+                SoldDate = new DateTime(2015 ,  05 , 23)
             };
             _pets.Add(lolka);
             _pets.Add(nikita);
+            _pets.Add(bPet);
+            _pets.Add(cPet);
+            _pets.Add(dPet);
+            _pets.Add(ePet);
 
         }
         #endregion
